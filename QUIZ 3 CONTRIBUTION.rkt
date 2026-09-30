@@ -6,12 +6,23 @@
 
 (define sampleDNA1 (make-DNA "A" "C" "T" "G" ))
 
+(define (findComplement x)
+  ( cond
+     [(string=? x "T") "A"]
+     [(string=? x "C") "G"]
+     [(string=? x "G") "C"]
+     [else "T"]
+
+   )
+  )
+
+(define DNA1 (make-DNA "A" "C" "T" "G"))
 (define sample1 
   (make-DNA
-  (findComplement(str1 DNA1)) ;auxilary function needed
-  (findComplement(str2 DNA1))
-  (findComplement(str3 DNA1))
-  (findComplement(str4 DNA1))
+  (findComplement(DNA-str1 DNA1)) ;auxilary function needed
+  (findComplement(DNA-str2 DNA1))
+  (findComplement(DNA-str3 DNA1))
+  (findComplement(DNA-str4 DNA1))
   )
 
   )

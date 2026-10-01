@@ -1,54 +1,88 @@
-;; The first three lines of this file were inserted by DrRacket. They record metadata
-;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname |QUIZ 3 CONTRIBUTION|) (read-case-sensitive #t) (teachpacks ((lib "universe.rkt" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "universe.rkt" "teachpack" "2htdp")) #f)))
-;;the struct DNA takes 4 strings, each representing a single charecter. each charecter should only be the letter A T C or G, and they should be uppercase
-(define-struct DNA (str1 str2 str3 str4))
+#lang htdp/bsl
 
-(define sampleDNA1 (make-DNA "A" "C" "T" "G" ))
+;; A nucleotide is either:
+;; 1. "A"
+;; 2. "T"
+;; 3. "G"
+;; 4. "C"
+(define A "A")
+(define T "T")
+(define C "C")
+(define G "G")
 
-(define (findComplement x)
-  ( cond
-     [(string=? x "T") "A"]
-     [(string=? x "C") "G"]
-     [(string=? x "G") "C"]
-     [else "T"]
+;; nucleotide -> nucleotide
+;; Purpose:To find the complement of the given nucleotide:
+;; A->T
+;; T->A
+;; C->G
+;; G->C
+(define (find-complement x)
+  (cond
+     [(string=? x  T) A]
+     [(string=? x  C) G]
+     [(string=? x  G) C]
+     [else "T"]))
 
-   )
-  )
+;; sample expressions for find-complement
+(define COMPLEMENT-A T)
+(define COMPLEMENT-T A)
+(define COMPLEMENT-C G)
+(define COMPLEMENT-G C)
 
-(define DNA1 (make-DNA "A" "C" "T" "G"))
+;; Tests for find-complement using sample values
+(check-expect (find-complement  A ) T )
+(check-expect (find-complement  T ) A )
+(check-expect (find-complement  C ) G )
+(check-expect (find-complement  G ) C )
+
+;; Tests for find-complement using sample expressions 
+(check-expect (find-complement A) COMPLEMENT-A)
+(check-expect (find-complement T) COMPLEMENT-T)
+(check-expect (find-complement C) COMPLEMENT-C)
+(check-expect (find-complement G) COMPLEMENT-G)
+      
+;; A DNA sequence is a structure: (make-DNA nucleotide nucleotide nucleotide nucleotide symbol)
+(define-struct DNA (str1 str2 str3 str4 species))
+
+(define sampleDNA1 (make-DNA "A" "C" "T" "G" 'dog))
+
+;; reverseDNA: DNA sequence->DNA sequence
+;; Purpose: To reverse the given DNA sequence
+
+(define (reverse-DNA a-DNA)
+ (make-DNA
+   (find-complement(DNA-str4 a-DNA))
+   (find-complement(DNA-str3 a-DNA))
+   (find-complement(DNA-str2 a-DNA))
+   (find-complement(DNA-str1 a-DNA))
+   (DNA-species a-DNA)))
+
+ 
+(define DNA2 (make-DNA C T A G 'dog))
+  (define sample2
+    (make-DNA
+     (find-complement(DNA-str4 DNA2))
+     (find-complement(DNA-str3 DNA2))
+     (find-complement(DNA-str2 DNA2))
+     (find-complement(DNA-str1 DNA2))
+     (DNA-species DNA2)))  
+
+
+
+  
+(define DNA1 (make-DNA "A" "C" "T" "G" 'dog))
 (define sample1 
   (make-DNA
-  (findComplement(DNA-str1 DNA1)) ;auxilary function needed
-  (findComplement(DNA-str2 DNA1))
-  (findComplement(DNA-str3 DNA1))
-  (findComplement(DNA-str4 DNA1))
-  )
+   (find-complement(DNA-str4 DNA1)) 
+   (find-complement(DNA-str3 DNA1))
+   (find-complement(DNA-str2 DNA1))
+   (find-complement(DNA-str1 DNA1))
+   (DNA-species DNA1)))
 
-  )
-                 
-  
+;; Tests for reverse DNA using sample expressions
+(check-expect (reverse-DNA DNA1 ) sample1)
+(check-expect (reverse-DNA DNA2 ) sample2)
+;; Tests for reverse DNA using sample values
+(check-expect (reverse-DNA (make-DNA A C T G 'dog)) (make-DNA C A G T 'dog))
+(check-expect (reverse-DNA (make-DNA C T A G 'dog)) (make-DNA C T A G 'dog))
 
-;;samples for findComplement
-
-(define sampleFindComplement1
-  ( cond
-     [(string=? "A" "T") "A"]
-     [(string=? "A" "C") "G"]
-     [(string=? "A" "G") "C"]
-     [else "T"]
-
-   )
-  )
-
-  (define sampleFindComplement2
-  ( cond
-     [(string=? "G" "T") "A"]
-     [(string=? "G" "C") "G"]
-     [(string=? "G" "G") "C"]
-     [else "T"]
-
-   )
-    )
-
-;; the difference between the two samples is the first charecter
